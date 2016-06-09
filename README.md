@@ -1,2 +1,2 @@
 # output-control
-Structural output controllability
+Code for Structural output controllability
