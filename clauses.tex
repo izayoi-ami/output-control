@@ -1,0 +1,54 @@
+\DeclareDocumentCommand \clauseStage {m m >{\SplitList{;}}g}{
+  \begin{tikzpicture}[x=1.75cm,y=2cm]
+    \pgfmathtruncatemacro{\m}{#1}
+    \pgfmathtruncatemacro{\n}{#2}
+    \tikzset{node distance = 7cm }
+    \GraphInit[vstyle=Normal]
+    \tikzset{VertexStyle/.append style = {minimum size = 35 pt}}
+    \tikzset{->-/.style={decoration={   markings,   mark=at position ##1 with {\arrow{>}}},postaction={decorate}}}
+    \tikzset{EdgeStyle/.append style = {->-=0.75, ultra thick} }
+    \draw[dotted] (-0.5,-0.5) rectangle (2*\n-0.5,-0.5);
+    \draw[dotted] (-0.5,2+\m-0.5) rectangle (2*\n-0.5,2+\m-0.5);
+    \draw[dashed] (-0.5,1.4) -- (2*\n-0.5,1.4);
+    \foreach \i [evaluate=\i as \x using -0.5+2*\i] in {0,...,\n}{
+      \draw[dotted] (\x,-0.5) -- (\x,2+\m-0.5);
+    }
+    \foreach \x [evaluate=\x as \i using \x-1] in {1,...,\n}{
+      \Vertex[x=0+2*\i,y=1,Math=true,L=X_\x]{X\x10}
+      \Vertex[x=1+2*\i,y=1,Math=true,L=\lnot X_\x]{X\x20}
+      \tikzset{VertexStyle/.style = {shape = circle, ball color=white}}
+      \Vertex[x=0.5+2*\i,y=0,Math=true,L=T_\x]{T}
+      \SetVertexNormal
+      \tikzset{VertexStyle/.append style = {minimum size = 35 pt}}
+      \foreach \v in {1,2} {\Edge(X\x\v0)(T)}
+      \foreach \p [evaluate=\p as \prev using \p-1] in {1,...,\m}{
+        \Vertex[x=0+2*\i,y=1+\p,Math=true,L=P_{X_{\x}}^{\p}]{X\x1\p}
+        \Vertex[x=1+2*\i,y=1+\p,Math=true,L=\lnot P_{X_{\x}}^{\p}]{X\x2\p}
+        %\draw let \phead=(X\x1\prev), \ptail=(X\x1\p) in (\phead) -> (\ptail);
+        \coordinate (pH) at ([shift={(-0.36,0.3)}]X\x1\prev);
+        \coordinate (pT) at ([shift={(0,-0.3)}]X\x1\p);
+        \draw[->-=0.75, ultra thick] (pH) -- (pT);
+        \coordinate (pH) at ([shift={(-0.36,0.3)}]X\x2\prev);
+        \coordinate (pT) at ([shift={(0,-0.3)}]X\x2\p);
+        \draw[->-=0.75, ultra thick] (pH) -- (pT);
+      }
+    }
+    %\addClause{3}{1}{-2}{3}
+    \DeclareDocumentCommand \addClauseOne {>{\SplitArgument{3}{,}}m}{
+      \addClause ##1
+    }
+
+    \DeclareDocumentCommand \addClause {m m m m}{
+      \tikzset{VertexStyle/.style = {shape = circle, ball color=white}}
+      \Vertex[x=-1.25,y=1+##1,Math=true,L=CL_##1]{CL}
+      \foreach \x in {##2,##3,##4}{
+        \pgfmathtruncatemacro{\n}{abs(\x)}
+        \pgfmathtruncatemacro{\b}{1+(\x<0)}
+        \Edge[style={bend right,dotted,->}](X\n\b##1)(CL)
+      }
+    }
+    \IfNoValueF{#3}{
+      \ProcessList {#3} {\addClauseOne}
+    }
+  \end{tikzpicture}
+}
