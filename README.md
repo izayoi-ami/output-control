@@ -5,6 +5,24 @@
 ## Detail Usage
 See appendix in https://www.doria.fi/handle/10024/130607
 
+## Requirements for the tex code
+
+- xparse
+- tikz
+- tkz-graph
+- tkz-berge
+
+Add the following in preamble:
+```Latex
+\usepackage{xparse}
+\usepackage{tikz}
+\usepackage{tkz-graph}
+\usepackage{tkz-berge}
+\usetikzlibrary{shapes}
+\usetikzlibrary{decorations.markings}
+\usetikzlibrary{calc}
+```
+
 ## Example
 
 ### Clause Stage
