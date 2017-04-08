@@ -1,5 +1,6 @@
 # output-control
-Code for Structural output controllability
+1. Code for verification of structural output controllability
+1. Code for generations of the gadgets construction in the NP-hardness proof
 
 ## Detail Usage
 See appendix in https://www.doria.fi/handle/10024/130607
